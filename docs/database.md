@@ -1,10 +1,10 @@
 # Banco e relacionamentos
 
-`supabase/migrations/` contém o schema executável inicial. Tipos de catálogo usam `text` com `CHECK` ou enum estável; IDs são UUID, horários `timestamptz`, XP/Coins inteiros não negativos. FKs de dados privados referenciam `auth.users`. Exclusão de conta faz cascade em registros privados; eventos financeiros podem exigir política de retenção antes de produção.
+`supabase/migrations/` contém o schema executável em três etapas: fundação, núcleo de aprendizagem e conteúdo inicial. Tipos de catálogo usam `text` com `CHECK`; IDs são UUID e horários `timestamptz`. FKs de dados privados referenciam `auth.users`. Exclusão de conta faz cascade em registros privados; eventos financeiros podem exigir política de retenção antes de produção.
 
 Índices principais: `(cefr_level,frequency_rank,id)` e busca trigram em `vocabulary_words`; `(user_id,next_review_at)` em revisões; `(module_id,position)` e `(lesson_id,position)` em currículo; `(user_id,created_at desc)` em ledgers/notificações/tentativas; unicidade de `(user_id,source_type,source_id)` quando prêmio só pode ser concedido uma vez. Cursor é ordenado por coluna indexada e ID.
 
-RLS: catálogos publicados permitem `SELECT` a autenticados. Cada tabela privada permite apenas acesso à própria linha quando apropriado. Ledgers e campos calculados não aceitam gravação direta do cliente. Escritas de sistema usam funções `SECURITY DEFINER` com `search_path` fixo, verificação explícita de usuário e entrada, ou backend confiável. A primeira migration inclui o núcleo da fase 1; demais entidades entram com suas fases, sempre por migration, evitando tabelas vazias sem invariantes definidas.
+RLS: catálogos permitem `SELECT` a autenticados; a aplicação filtra trilhas e lições publicadas. Cada tabela privada permite apenas acesso à própria linha quando apropriado. Ledgers e campos calculados não aceitam gravação direta do cliente. Escritas de sistema usam funções `SECURITY DEFINER` com `search_path` fixo, verificação explícita de usuário e entrada, ou backend confiável.
 
 ## Schema planejado por domínio
 
@@ -43,4 +43,4 @@ RLS: catálogos publicados permitem `SELECT` a autenticados. Cada tabela privada
 - **Catálogos:** `SELECT` para autenticados quando publicados; `INSERT/UPDATE/DELETE` somente via papel administrativo validado no servidor.
 - **Ranking:** visão agregada com participação explícita em `user_settings.ranking_public`; nunca expor endereço de e-mail.
 
-Cada migration futura deve adicionar suas FKs, `CHECK`, `UNIQUE`, índices e políticas antes de expor a rota. As tabelas acima são contrato de modelagem; somente as tabelas da fase 1 existem na migration atual.
+As tabelas de ligas e dos modos dedicados de reading, listening e writing seguem planejadas; as demais entidades listadas já possuem schema. Cada migration futura deve adicionar suas FKs, `CHECK`, `UNIQUE`, índices e políticas antes de expor a rota.

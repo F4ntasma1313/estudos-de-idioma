@@ -1,0 +1,11 @@
+word,translation,definition_en,example_en,cefr_level,word_type,category_slug,frequency_rank
+hello,olá,A greeting used when meeting someone.,"Hello, my name is Ana.",A1,expression,daily-life,1
+goodbye,adeus,A word said when leaving.,"Goodbye, see you tomorrow.",A1,expression,daily-life,2
+friend,amigo,A person you like and know well.,"My friend lives nearby.",A1,noun,family,7
+family,família,People related to one another.,"My family is very kind.",A1,noun,family,8
+water,água,A clear liquid that people drink.,"I drink water every day.",A1,noun,food,11
+book,livro,A set of pages with words or pictures.,"This book is interesting.",A1,noun,daily-life,16
+train,trem,A vehicle that travels on tracks.,"The train leaves at noon.",A2,noun,travel,21
+ticket,passagem,A document that allows travel or entry.,"I bought a train ticket.",A2,noun,travel,22
+software,programa,Computer programs and related data.,"This software helps students.",B1,noun,technology,32
+deploy,implantar,To make software available for use.,"We deploy the app today.",B1,verb,technology,40

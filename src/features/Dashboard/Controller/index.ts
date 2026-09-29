@@ -9,11 +9,3 @@ export async function loadDashboard() {
   if (!data) return { status: "onboarding" as const };
   return { status: "ready" as const, data };
 }
-
-export async function signOut() {
-  "use server";
-  const client = await createClient();
-  await client.auth.signOut();
-  const { redirect } = await import("next/navigation");
-  redirect("/");
-}

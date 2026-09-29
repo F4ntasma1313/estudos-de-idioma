@@ -1,0 +1,36 @@
+import assert from "node:assert/strict";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import test from "node:test";
+import { previewFile } from "../scripts/seed-vocabulary/Controller/index.ts";
+import { reminderIsDue } from "../src/services/push/Controller/index.ts";
+
+test("import preview keeps valid words and identifies duplicate and invalid rows", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "english-journey-seed-"));
+  try {
+    const path = join(directory, "words.json");
+    await writeFile(path, JSON.stringify([
+      { word: "Hello", translation: "olá", definition_en: "A greeting.", example_en: "Hello, Ana!", cefr_level: "A1", word_type: "expression" },
+      { word: "hello", translation: "olá", definition_en: "A greeting.", example_en: "Hello, Ana!", cefr_level: "A1", word_type: "expression" },
+      { word: "broken", translation: "", definition_en: "A word.", example_en: "It is broken.", cefr_level: "A1", word_type: "adjective" },
+    ]));
+    const result = await previewFile(path);
+    assert.equal(result.valid.length, 1);
+    assert.equal(result.duplicate, 1);
+    assert.equal(result.invalid, 1);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("push reminder follows the user's timezone and half-hour dispatch window", () => {
+  const settings = { user_id: "user", timezone: "America/Sao_Paulo", reminder_time: "18:30:00", daily_reminder_enabled: true, push_enabled: true };
+  const before = reminderIsDue(settings, new Date("2026-09-29T21:29:00Z"));
+  const due = reminderIsDue(settings, new Date("2026-09-29T21:30:00Z"));
+  const after = reminderIsDue(settings, new Date("2026-09-29T22:00:00Z"));
+  assert.deepEqual(before, { due: false, localDate: "2026-09-29" });
+  assert.deepEqual(due, { due: true, localDate: "2026-09-29" });
+  assert.deepEqual(after, { due: false, localDate: "2026-09-29" });
+  assert.equal(reminderIsDue({ ...settings, daily_reminder_enabled: false }, new Date("2026-09-29T21:30:00Z")).due, false);
+});
