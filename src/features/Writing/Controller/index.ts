@@ -10,6 +10,7 @@ export function useWriting(initialBody: string, challengeId: string, minWords: n
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const wordCount = countWords(body);
+  function changeBody(value: string) { setBody(value); setSaved(false); }
   async function submit() {
     if (busy) return;
     if (wordCount < minWords) { setError(`Escreva ao menos ${minWords} palavras.`); return; }
@@ -22,5 +23,5 @@ export function useWriting(initialBody: string, challengeId: string, minWords: n
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível salvar."); }
     finally { setBusy(false); }
   }
-  return { body, setBody, wordCount, saved, busy, error, submit };
+  return { body, changeBody, wordCount, saved, busy, error, submit };
 }
