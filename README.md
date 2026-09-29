@@ -47,7 +47,7 @@ O preview do importador não grava dados. `--apply` requer `SUPABASE_SERVICE_ROL
 - `src/repositories`: consultas e comandos Supabase.
 - `src/services`: integração de vocabulário, offline e push.
 - `supabase/migrations`: schema e conteúdo inicial.
-- `docs/`: decisões de [arquitetura](docs/architecture.md), [banco](docs/database.md), [gamificação](docs/gamification.md), [revisão](docs/spaced-repetition.md) e [push](docs/push-notifications.md).
+- `docs/`: decisões de [arquitetura](docs/architecture.md), [banco](docs/database.md), [gamificação](docs/gamification.md), [revisão](docs/spaced-repetition.md), [ranking](docs/ranking.md) e [push](docs/push-notifications.md).
 
 ## Estado atual
 
