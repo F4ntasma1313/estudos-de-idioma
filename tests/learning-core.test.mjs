@@ -10,6 +10,7 @@ import { speechSimilarity } from "../src/features/Speaking/Controller/index.ts";
 import { countWords } from "../src/features/Writing/Controller/index.ts";
 import { writingSubmissionSchema } from "../src/features/Writing/Model/index.ts";
 import { readingAnswerSchema } from "../src/features/Reading/Model/index.ts";
+import { rankingFilters } from "../src/features/Ranking/Controller/index.ts";
 
 test("import preview keeps valid words and identifies duplicate and invalid rows", async () => {
   const directory = await mkdtemp(join(tmpdir(), "english-journey-seed-"));
@@ -62,4 +63,9 @@ test("writing length and reading option are validated before database calls", ()
   assert.equal(countWords("   "), 0);
   assert.equal(writingSubmissionSchema.safeParse({ challengeId: "00000000-0000-4000-8000-000000000001", bodyEn: "too short" }).success, false);
   assert.equal(readingAnswerSchema.safeParse({ questionId: "00000000-0000-4000-8000-000000000001", optionIndex: 4 }).success, false);
+});
+
+test("ranking filters fall back to public weekly XP for invalid query values", () => {
+  assert.deepEqual(rankingFilters({ period: "unknown", metric: "coins" }), { period: "weekly", metric: "xp" });
+  assert.deepEqual(rankingFilters({ period: "monthly", metric: "words" }), { period: "monthly", metric: "words" });
 });

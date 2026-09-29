@@ -1,6 +1,6 @@
 # Banco e relacionamentos
 
-`supabase/migrations/` contém o schema executável em quatro etapas: fundação, núcleo de aprendizagem, conteúdo inicial e reading/writing. Tipos de catálogo usam `text` com `CHECK`; IDs são UUID e horários `timestamptz`. FKs de dados privados referenciam `auth.users`. Exclusão de conta faz cascade em registros privados; eventos financeiros podem exigir política de retenção antes de produção.
+`supabase/migrations/` contém o schema executável em cinco etapas: fundação, núcleo de aprendizagem, conteúdo inicial, reading/writing e ranking/ligas. Tipos de catálogo usam `text` com `CHECK`; IDs são UUID e horários `timestamptz`. FKs de dados privados referenciam `auth.users`. Exclusão de conta faz cascade em registros privados; eventos financeiros podem exigir política de retenção antes de produção.
 
 Índices principais: `(cefr_level,frequency_rank,id)` e busca trigram em `vocabulary_words`; `(user_id,next_review_at)` em revisões; `(module_id,position)` e `(lesson_id,position)` em currículo; `(user_id,created_at desc)` em ledgers/notificações/tentativas; unicidade de `(user_id,source_type,source_id)` quando prêmio só pode ser concedido uma vez. Cursor é ordenado por coluna indexada e ID.
 
@@ -43,4 +43,4 @@ RLS: catálogos permitem `SELECT` a autenticados; a aplicação filtra trilhas e
 - **Catálogos:** `SELECT` para autenticados quando publicados; `INSERT/UPDATE/DELETE` somente via papel administrativo validado no servidor.
 - **Ranking:** visão agregada com participação explícita em `user_settings.ranking_public`; nunca expor endereço de e-mail.
 
-As tabelas de ligas e do modo listening com áudio próprio seguem planejadas; reading e writing têm schema na migration 004. Cada migration futura deve adicionar suas FKs, `CHECK`, `UNIQUE`, índices e políticas antes de expor a rota.
+As tabelas de ligas estão na migration 005, com promoção dos melhores 20% e rebaixamento limitado aos últimos 10% ativos de grupos com pelo menos dez participantes. O modo listening com áudio próprio segue planejado. Cada migration futura deve adicionar suas FKs, `CHECK`, `UNIQUE`, índices e políticas antes de expor a rota.
