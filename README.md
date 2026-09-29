@@ -49,6 +49,6 @@ O preview do importador não grava dados. `--apply` requer `SUPABASE_SERVICE_ROL
 
 ## Estado atual
 
-O fluxo principal de estudo, revisão e lições está implementado. O modo offline usa IndexedDB, guarda respostas com um ID de operação e sincroniza ao voltar a conexão; abra o app online ao menos uma vez para instalar o cache. A instalação PWA exige HTTPS ou localhost.
+O fluxo principal de estudo, revisão e lições está implementado. A prática inclui escolha múltipla, digitação, escuta com síntese de voz, flashcards livres e repetição de frases com reconhecimento de fala quando o navegador suporta Web Speech. A correspondência da fala é uma estimativa de texto, sem avaliação fonética. O modo offline usa IndexedDB, guarda respostas com um ID de operação e sincroniza ao voltar a conexão; abra o app online ao menos uma vez para instalar o cache. A instalação PWA exige HTTPS ou localhost.
 
-O escopo ampliado do prompt ainda exige um catálogo licenciado de 10–20 mil palavras e módulos dedicados de listening, speaking, reading e writing, além de ranking/ligas, nivelamento e administração. Esses módulos não são apresentados como prontos. Uma validação ponta a ponta em produção depende da execução das migrations 002/003 no Supabase e das variáveis da Vercel.
+O escopo ampliado do prompt ainda exige um catálogo licenciado de 10–20 mil palavras, conteúdo de listening com áudio próprio, módulos de reading e writing, ranking/ligas, nivelamento e administração. Esses módulos não são apresentados como prontos. O envio de Web Push depende das chaves VAPID e dos secrets do job.

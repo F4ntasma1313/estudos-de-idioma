@@ -5,6 +5,8 @@ import { tmpdir } from "node:os";
 import test from "node:test";
 import { previewFile } from "../scripts/seed-vocabulary/Controller/index.ts";
 import { reminderIsDue } from "../src/services/push/Controller/index.ts";
+import { createCards } from "../src/services/vocabulary/Controller/index.ts";
+import { speechSimilarity } from "../src/features/Speaking/Controller/index.ts";
 
 test("import preview keeps valid words and identifies duplicate and invalid rows", async () => {
   const directory = await mkdtemp(join(tmpdir(), "english-journey-seed-"));
@@ -33,4 +35,21 @@ test("push reminder follows the user's timezone and half-hour dispatch window", 
   assert.deepEqual(due, { due: true, localDate: "2026-09-29" });
   assert.deepEqual(after, { due: false, localDate: "2026-09-29" });
   assert.equal(reminderIsDue({ ...settings, daily_reminder_enabled: false }, new Date("2026-09-29T21:30:00Z")).due, false);
+});
+
+test("study cards provide four unique choices and a flashcard translation", () => {
+  const words = ["hello", "book", "water", "city"].map((word, index) => ({ id: String(index), word, translation: ["olá", "livro", "água", "cidade"][index], phonetic: null, cefr_level: "A1", word_type: "noun", definition_en: "", example_en: "" }));
+  const cards = createCards(words, words);
+  assert.equal(cards.length, 4);
+  for (const card of cards) {
+    assert.equal(card.options.length, 4);
+    assert.equal(new Set(card.options).size, 4);
+    assert.ok(card.options.includes(card.translation));
+  }
+});
+
+test("speech text comparison ignores case and punctuation but detects different phrases", () => {
+  assert.equal(speechSimilarity("Hello, my friend!", "hello my friend"), 100);
+  assert.ok(speechSimilarity("I am going to work", "I am going home") < 80);
+  assert.equal(speechSimilarity("Hello", ""), 0);
 });

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { StudyCard, AnswerResult } from "@/features/Vocabulary/Model";
-import type { AnswerResponse, DeckResponse, LessonCompletion, StudyMode } from "../Model";
+import type { AnswerResponse, DeckResponse, LessonCompletion, PracticeFormat, StudyMode } from "../Model";
 import { deckKey, enqueueAnswer, getDeck, saveDeck, syncPending } from "@/services/offline";
 
 export function useStudy(mode: StudyMode, initialLevel: string, userId: string, lessonId?: string) {
@@ -16,6 +16,11 @@ export function useStudy(mode: StudyMode, initialLevel: string, userId: string, 
   const [completion, setCompletion] = useState<LessonCompletion | null>(null);
   const [queued, setQueued] = useState(false);
   const [offline, setOffline] = useState(false);
+  const [format, setFormat] = useState<PracticeFormat>("choice");
+  const [typedAnswer, setTypedAnswer] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const [speechRate, setSpeechRate] = useState(1);
+  const [canSpeak, setCanSpeak] = useState(false);
   const startedAt = useRef(0);
   const operationId = useRef("");
 
@@ -44,6 +49,24 @@ export function useStudy(mode: StudyMode, initialLevel: string, userId: string, 
     window.addEventListener("online", onOnline); const timer = setTimeout(onOnline, 0);
     return () => { clearTimeout(timer); window.removeEventListener("online", onOnline); };
   }, [userId]);
+  useEffect(() => { const timer = setTimeout(() => setCanSpeak("speechSynthesis" in window), 0); return () => clearTimeout(timer); }, []);
+
+  function speak() {
+    const card = cards[index];
+    if (!card || !canSpeak) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(card.word);
+    utterance.lang = "en-US";
+    utterance.rate = speechRate;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function changeFormat(value: PracticeFormat) {
+    setFormat(value);
+    setTypedAnswer("");
+    setRevealed(false);
+    window.speechSynthesis?.cancel();
+  }
 
   async function choose(option: string) {
     const card = cards[index];
@@ -66,7 +89,7 @@ export function useStudy(mode: StudyMode, initialLevel: string, userId: string, 
   }
 
   async function next() {
-    setAnswer(null); setQueued(false); setIndex((current) => current + 1); startedAt.current = Date.now(); operationId.current = crypto.randomUUID();
+    setAnswer(null); setQueued(false); setTypedAnswer(""); setRevealed(false); setIndex((current) => current + 1); startedAt.current = Date.now(); operationId.current = crypto.randomUUID();
     if (mode === "lesson" && lessonId && index === cards.length - 1 && !offline) {
       setSubmitting(true);
       try {
@@ -78,5 +101,5 @@ export function useStudy(mode: StudyMode, initialLevel: string, userId: string, 
       finally { setSubmitting(false); }
     }
   }
-  return { level, setLevel, cards, index, loading, submitting, error, answer, completion, queued, offline, choose, next, reload: () => load() };
+  return { level, setLevel, cards, index, loading, submitting, error, answer, completion, queued, offline, format, changeFormat, typedAnswer, setTypedAnswer, revealed, setRevealed, speechRate, setSpeechRate, canSpeak, speak, choose, next, reload: () => load() };
 }
