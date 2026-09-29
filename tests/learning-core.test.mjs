@@ -7,6 +7,9 @@ import { previewFile } from "../scripts/seed-vocabulary/Controller/index.ts";
 import { reminderIsDue } from "../src/services/push/Controller/index.ts";
 import { createCards } from "../src/services/vocabulary/Controller/index.ts";
 import { speechSimilarity } from "../src/features/Speaking/Controller/index.ts";
+import { countWords } from "../src/features/Writing/Controller/index.ts";
+import { writingSubmissionSchema } from "../src/features/Writing/Model/index.ts";
+import { readingAnswerSchema } from "../src/features/Reading/Model/index.ts";
 
 test("import preview keeps valid words and identifies duplicate and invalid rows", async () => {
   const directory = await mkdtemp(join(tmpdir(), "english-journey-seed-"));
@@ -52,4 +55,11 @@ test("speech text comparison ignores case and punctuation but detects different 
   assert.equal(speechSimilarity("Hello, my friend!", "hello my friend"), 100);
   assert.ok(speechSimilarity("I am going to work", "I am going home") < 80);
   assert.equal(speechSimilarity("Hello", ""), 0);
+});
+
+test("writing length and reading option are validated before database calls", () => {
+  assert.equal(countWords("  I write\nthree words.  "), 4);
+  assert.equal(countWords("   "), 0);
+  assert.equal(writingSubmissionSchema.safeParse({ challengeId: "00000000-0000-4000-8000-000000000001", bodyEn: "too short" }).success, false);
+  assert.equal(readingAnswerSchema.safeParse({ questionId: "00000000-0000-4000-8000-000000000001", optionIndex: 4 }).success, false);
 });

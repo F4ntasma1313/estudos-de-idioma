@@ -11,8 +11,9 @@ No SQL Editor do Supabase, execute as migrations nesta ordem, cada uma uma únic
 1. `supabase/migrations/202609290001_foundation.sql`
 2. `supabase/migrations/202609290002_learning_core.sql`
 3. `supabase/migrations/202609290003_starter_content.sql`
+4. `supabase/migrations/202609290004_reading_writing.sql`
 
-Em projetos onde a primeira já foi aplicada, execute apenas a segunda e a terceira. O conteúdo inicial tem 52 palavras revisadas e três trilhas. O importador aceita um catálogo maior em CSV/JSON, com definição, exemplo, tradução e nível obrigatórios. Ele não inventa dados ausentes.
+Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes. O conteúdo inicial tem 52 palavras revisadas, três trilhas, seis textos de leitura e seis desafios de escrita. O importador aceita um catálogo maior em CSV/JSON, com definição, exemplo, tradução e nível obrigatórios. Ele não inventa dados ausentes.
 
 No Supabase Auth, adicione `http://localhost:3000/auth/callback` e `https://estudos-de-idioma.vercel.app/auth/callback` aos redirects. Configure a Site URL de produção e, se desejar, habilite Google OAuth no painel. O cadastro por e-mail pode exigir confirmação, conforme as opções do projeto.
 
@@ -51,4 +52,4 @@ O preview do importador não grava dados. `--apply` requer `SUPABASE_SERVICE_ROL
 
 O fluxo principal de estudo, revisão e lições está implementado. A prática inclui escolha múltipla, digitação, escuta com síntese de voz, flashcards livres e repetição de frases com reconhecimento de fala quando o navegador suporta Web Speech. A correspondência da fala é uma estimativa de texto, sem avaliação fonética. O modo offline usa IndexedDB, guarda respostas com um ID de operação e sincroniza ao voltar a conexão; abra o app online ao menos uma vez para instalar o cache. A instalação PWA exige HTTPS ou localhost.
 
-O escopo ampliado do prompt ainda exige um catálogo licenciado de 10–20 mil palavras, conteúdo de listening com áudio próprio, módulos de reading e writing, ranking/ligas, nivelamento e administração. Esses módulos não são apresentados como prontos. O envio de Web Push depende das chaves VAPID e dos secrets do job.
+O escopo ampliado do prompt ainda exige um catálogo licenciado de 10–20 mil palavras, conteúdo de listening com áudio próprio, ranking/ligas, nivelamento e administração. Reading tem textos e questões corrigidas pelo banco; writing registra textos privados, sem avaliação automática nesta versão. O envio de Web Push depende das chaves VAPID e dos secrets do job.
