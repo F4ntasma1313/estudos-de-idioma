@@ -3,7 +3,9 @@ export interface PronunciationProps {
   phonetic: string | null;
 }
 
-export interface PronunciationViewProps extends PronunciationProps {
+export interface PronunciationViewProps {
+  word: string;
+  readable: string | null;
   canSpeak: boolean;
   speak(): void;
 }

@@ -12,6 +12,7 @@ import { countWords } from "../src/features/Writing/Controller/index.ts";
 import { writingSubmissionSchema } from "../src/features/Writing/Model/index.ts";
 import { readingAnswerSchema } from "../src/features/Reading/Model/index.ts";
 import { rankingFilters } from "../src/features/Ranking/Controller/index.ts";
+import { readablePronunciation } from "../src/components/Pronunciation/Controller/index.ts";
 
 test("import preview keeps valid words and identifies duplicate and invalid rows", async () => {
   const directory = await mkdtemp(join(tmpdir(), "english-journey-seed-"));
@@ -73,6 +74,19 @@ test("every catalog and starter word has an American pronunciation", async () =>
   }
   assert.equal(byWord.get("record")?.phonetic, "/ɹəkˈɔɹd/");
   assert.equal(byWord.get("wind")?.phonetic, "/wˈaɪnd/");
+});
+
+test("every American pronunciation has a readable Portuguese approximation", async () => {
+  const pronunciations = JSON.parse(await readFile(fileURLToPath(new URL("../data/american-pronunciations.json", import.meta.url)), "utf8"));
+  for (const entry of pronunciations) {
+    assert.match(readablePronunciation(entry.word, entry.phonetic) ?? "", /^[a-záâéêíóôúãõç -]+$/i, entry.word);
+  }
+  const hints = new Map(pronunciations.map((entry) => [entry.word, readablePronunciation(entry.word, entry.phonetic)]));
+  assert.equal(hints.get("schoolboy"), "iscúl-bói");
+  assert.equal(hints.get("driver"), "dráiver");
+  assert.equal(hints.get("football"), "fútból");
+  assert.equal(hints.get("fifty-five"), "fífti-fáiv");
+  assert.match(hints.get("constructor") ?? "", /^[a-záâéêíóôúãõç -]+$/i);
 });
 
 test("push reminder follows the user's timezone and half-hour dispatch window", () => {

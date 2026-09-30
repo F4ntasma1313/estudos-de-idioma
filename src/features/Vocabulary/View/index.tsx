@@ -8,7 +8,7 @@ import { useVocabulary } from "../Controller";
 export function VocabularyView({ initialLevel }: VocabularyViewProps) {
   const state = useVocabulary(initialLevel);
   return <AppShell active="/vocabulary">
-    <div><p className="eyebrow">Explore</p><h1 className="mt-2 text-4xl font-extrabold">Vocabulário</h1><p className="mt-2 text-muted">Encontre palavras, traduções, definições e exemplos em inglês e português.</p></div>
+    <div><p className="eyebrow">Explore</p><h1 className="mt-2 text-4xl font-extrabold">Vocabulário</h1><p className="mt-2 text-muted">Encontre palavras, traduções, definições e exemplos em inglês e português. A indicação entre parênteses aproxima o som para falantes de português; use o alto-falante para ouvir a pronúncia americana.</p></div>
     <div className="mt-7 grid gap-3 sm:grid-cols-[1fr_9rem]">
       <label className="text-sm font-bold">Buscar<input value={state.query} onChange={(event) => state.setQuery(event.target.value)} className="input mt-2" placeholder="Palavra, tradução ou definição" /></label>
       <label className="text-sm font-bold">Nível<select className="input mt-2" value={state.level} onChange={(event) => state.setLevel(event.target.value)}>{cefrLevels.map((level) => <option key={level}>{level}</option>)}</select></label>
