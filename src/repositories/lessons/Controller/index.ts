@@ -31,7 +31,7 @@ export async function getLessonWords(client: DatabaseClient, lessonId: string): 
   if (error) throw error;
   const ids = (exercises ?? []).map((item) => item.word_id as string);
   if (!ids.length) return [];
-  const { data: words, error: wordsError } = await client.from("vocabulary_words").select("id,word,translation,definition_en,example_en,cefr_level,word_type,phonetic").in("id", ids);
+  const { data: words, error: wordsError } = await client.from("vocabulary_words").select("id,word,translation,definition_en,definition_pt,example_en,example_pt,cefr_level,word_type,phonetic").in("id", ids);
   if (wordsError) throw wordsError;
   const byId = new Map((words ?? []).map((word) => [word.id, word]));
   return ids.flatMap((id) => { const word = byId.get(id); return word ? [word as VocabularyWord] : []; });

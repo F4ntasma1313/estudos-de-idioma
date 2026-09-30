@@ -23,7 +23,7 @@ export function createCards(words: VocabularyWord[], pool: VocabularyWord[]): St
     shuffle(distractors);
     const options = [item.translation, ...distractors.slice(0, 3)];
     shuffle(options);
-    return { id: item.id, word: item.word, translation: item.translation, exampleEn: item.example_en, phonetic: item.phonetic, cefrLevel: item.cefr_level, options };
+    return { id: item.id, word: item.word, translation: item.translation, definitionEn: item.definition_en, definitionPt: item.definition_pt, exampleEn: item.example_en, examplePt: item.example_pt, phonetic: item.phonetic, cefrLevel: item.cefr_level, options };
   }).filter((card) => card.options.length === 4);
 }
 

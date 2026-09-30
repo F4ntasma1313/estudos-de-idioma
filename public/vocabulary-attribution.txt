@@ -27,3 +27,8 @@ sem frequency_rank foram preservadas vazias.
 
 As fontes e licenças acima foram declaradas na planilha fornecida. O código da
 aplicação e o conteúdo do catálogo podem ter termos de uso distintos.
+
+As colunas definition_pt e example_pt foram geradas por tradução automática
+local com o modelo en→pb do Argos Translate 1.9. Foi feita revisão por
+amostragem e correção pontual, sem revisão humana de cada uma das 20.000
+entradas. Erros de tradução ainda podem existir.

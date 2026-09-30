@@ -21,12 +21,13 @@ Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes.
 O arquivo `data/english-vocabulary-20000.csv` foi preparado da planilha recebida do usuário. Para carregá-lo pelo Supabase SQL Editor, execute nesta ordem:
 
 1. `supabase/manual/202609300001_vocabulary_categories.sql` (nove categorias; pode ser reexecutado).
-2. `supabase/manual/vocabulary-catalog/catalog-01.sql` até `catalog-10.sql`, em ordem (2.000 palavras por lote).
-3. `supabase/manual/202609300002_vocabulary_activities.sql` (seis trilhas A1–C2, blocos e atividades de até 25 palavras).
+2. `supabase/manual/vocabulary-catalog/catalog-01.sql` até `catalog-10.sql`, em ordem (2.000 palavras por lote). Execute novamente os dez lotes se já importou a versão anterior: o `ON CONFLICT` preenche `definition_pt` e `example_pt` nos registros existentes.
+3. `supabase/manual/vocabulary-catalog/starter-bilingual.sql` (quatro palavras do conteúdo inicial ausentes da planilha).
+4. `supabase/manual/202609300002_vocabulary_activities.sql` (seis trilhas A1–C2, blocos e atividades de até 25 palavras; não precisa reexecutar se já foi aplicado).
 
 O último script mostra a quantidade de atividades e palavras por nível. A soma de `palavras` deve ser pelo menos 20.000, pois o conteúdo inicial pode conter palavras adicionais. As 5.038 entradas sem `frequency_rank` ficam com `NULL` no banco. As entradas `play` e `volley` receberam as correções descritas em `public/vocabulary-attribution.txt`.
 
-A planilha informa que parte do conteúdo foi gerada por IA e não recebeu revisão humana individual; as classificações CEFR podem ser estimativas. As fontes declaradas na planilha e as alterações feitas estão em `public/vocabulary-attribution.txt`. O importador CSV/JSON também aceita frequência vazia e não inventa dados ausentes.
+A planilha informa que parte do conteúdo foi gerada por IA e não recebeu revisão humana individual; as classificações CEFR podem ser estimativas. As definições e frases em português do catálogo foram traduzidas automaticamente, com revisão apenas por amostragem. As fontes declaradas na planilha e as alterações feitas estão em `public/vocabulary-attribution.txt`. O importador CSV/JSON também aceita frequência vazia e não inventa dados ausentes.
 
 No Supabase Auth, adicione `http://localhost:3000/auth/callback` e `https://estudos-de-idioma.vercel.app/auth/callback` aos redirects. Configure a Site URL de produção e, se desejar, habilite Google OAuth no painel. O cadastro por e-mail pode exigir confirmação, conforme as opções do projeto.
 

@@ -54,6 +54,7 @@ test("the committed catalog covers all six levels and keeps the reviewed correct
   assert.equal(result.valid.filter((row) => row.frequency_rank === undefined).length, 5038);
   assert.equal(result.valid.find((row) => row.word === "play")?.word_type, "verb");
   assert.equal(result.valid.find((row) => row.word === "volley")?.category_slug, "general-vocabulary");
+  assert.equal(result.valid.filter((row) => !row.definition_pt?.trim() || !row.example_pt?.trim()).length, 0);
 });
 
 test("push reminder follows the user's timezone and half-hour dispatch window", () => {
@@ -68,13 +69,15 @@ test("push reminder follows the user's timezone and half-hour dispatch window", 
 });
 
 test("study cards provide four unique choices and a flashcard translation", () => {
-  const words = ["hello", "book", "water", "city"].map((word, index) => ({ id: String(index), word, translation: ["olá", "livro", "água", "cidade"][index], phonetic: null, cefr_level: "A1", word_type: "noun", definition_en: "", example_en: "" }));
+  const words = ["hello", "book", "water", "city"].map((word, index) => ({ id: String(index), word, translation: ["olá", "livro", "água", "cidade"][index], phonetic: null, cefr_level: "A1", word_type: "noun", definition_en: "A sample definition.", definition_pt: "Uma definição de exemplo.", example_en: "A sample sentence.", example_pt: "Uma frase de exemplo." }));
   const cards = createCards(words, words);
   assert.equal(cards.length, 4);
   for (const card of cards) {
     assert.equal(card.options.length, 4);
     assert.equal(new Set(card.options).size, 4);
     assert.ok(card.options.includes(card.translation));
+    assert.equal(card.definitionPt, "Uma definição de exemplo.");
+    assert.equal(card.examplePt, "Uma frase de exemplo.");
   }
 });
 

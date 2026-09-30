@@ -1,12 +1,12 @@
 import type { DatabaseClient } from "../Model";
 import type { VocabularyWord } from "@/features/Vocabulary/Model";
 
-const fields = "id,word,translation,definition_en,example_en,cefr_level,word_type,phonetic";
+const fields = "id,word,translation,definition_en,definition_pt,example_en,example_pt,cefr_level,word_type,phonetic";
 
 export async function findWords(client: DatabaseClient, options: { q?: string; level?: string; cursor?: string; limit?: number }): Promise<VocabularyWord[]> {
   let query = client.from("vocabulary_words").select(fields).order("id").limit(options.limit ?? 20);
   if (options.level) query = query.eq("cefr_level", options.level);
-  if (options.q) query = query.or(`word.ilike.%${escapeSearch(options.q)}%,translation.ilike.%${escapeSearch(options.q)}%`);
+  if (options.q) query = query.or(`word.ilike.%${escapeSearch(options.q)}%,translation.ilike.%${escapeSearch(options.q)}%,definition_pt.ilike.%${escapeSearch(options.q)}%`);
   if (options.cursor) query = query.gt("id", options.cursor);
   const { data, error } = await query;
   if (error) throw error;
