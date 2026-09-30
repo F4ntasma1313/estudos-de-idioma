@@ -1,0 +1,29 @@
+English Journey — fontes do catálogo de vocabulário
+
+O catálogo de 20.000 entradas foi preparado a partir da planilha
+english_vocabulary_20000_corrigido.xlsx fornecida pelo usuário em 30/09/2026.
+As definições, traduções, exemplos e níveis podem conter erros; a planilha
+informa que parte do conteúdo foi gerada por IA e não recebeu revisão humana
+individual.
+
+Fontes informadas na planilha:
+- Vocab Bloom Hub English dataset (CC BY 4.0):
+  https://huggingface.co/datasets/Fristail27/vocab-bloom-hub-en
+  Licença: https://creativecommons.org/licenses/by/4.0/
+- Traduções do Wiktionary via Zenodo:
+  https://zenodo.org/records/1286991
+- WikDict, baseado no Wiktionary (CC BY-SA):
+  https://www.wikdict.com/page/about
+  Licença: https://creativecommons.org/licenses/by-sa/4.0/
+- Perfis CEFR-J/OCTANOVE:
+  https://github.com/openlanguageprofiles/olp-en-cefrj
+- FrequencyWords (lista de frequência 2018):
+  https://github.com/hermitdave/FrequencyWords
+
+Modificações feitas pelo English Journey: na entrada "play", classe gramatical
+ajustada para verbo e definição alinhada ao exemplo e à tradução; na entrada
+"volley", categoria alterada de esportes para vocabulário geral. As células
+sem frequency_rank foram preservadas vazias.
+
+As fontes e licenças acima foram declaradas na planilha fornecida. O código da
+aplicação e o conteúdo do catálogo podem ter termos de uso distintos.

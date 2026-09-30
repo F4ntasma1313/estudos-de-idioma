@@ -7,7 +7,7 @@ export const vocabularyRowSchema = z.object({
   word_type: z.enum(["noun","verb","adjective","adverb","pronoun","preposition","conjunction","expression","phrasal_verb"]),
   category_slug: z.string().trim().min(1).default("daily-life"),
   phonetic: z.string().optional(), definition_pt: z.string().optional(), example_pt: z.string().optional(),
-  frequency_rank: z.coerce.number().int().positive().optional(), image_url: z.url().optional(), audio_url: z.url().optional(),
+  frequency_rank: z.preprocess((value) => value === "" || value === null ? undefined : value, z.coerce.number().int().positive().optional()), image_url: z.url().optional(), audio_url: z.url().optional(),
 });
 export type VocabularyRow = z.infer<typeof vocabularyRowSchema>;
 export interface SeedPreview { valid: VocabularyRow[]; invalid: number; duplicate: number }

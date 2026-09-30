@@ -14,7 +14,19 @@ No SQL Editor do Supabase, execute as migrations nesta ordem, cada uma uma únic
 4. `supabase/migrations/202609290004_reading_writing.sql`
 5. `supabase/migrations/202609290005_rankings_leagues.sql`
 
-Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes. O conteúdo inicial tem 52 palavras revisadas, três trilhas, seis textos de leitura e seis desafios de escrita. O importador aceita um catálogo maior em CSV/JSON, com definição, exemplo, tradução e nível obrigatórios. Ele não inventa dados ausentes.
+Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes. O conteúdo inicial tem 52 palavras revisadas, três trilhas, seis textos de leitura e seis desafios de escrita.
+
+### Catálogo de 20.000 palavras
+
+O arquivo `data/english-vocabulary-20000.csv` foi preparado da planilha recebida do usuário. Para carregá-lo pelo Supabase SQL Editor, execute nesta ordem:
+
+1. `supabase/manual/202609300001_vocabulary_categories.sql` (nove categorias; pode ser reexecutado).
+2. `supabase/manual/vocabulary-catalog/catalog-01.sql` até `catalog-10.sql`, em ordem (2.000 palavras por lote).
+3. `supabase/manual/202609300002_vocabulary_activities.sql` (seis trilhas A1–C2, blocos e atividades de até 25 palavras).
+
+O último script mostra a quantidade de atividades e palavras por nível. A soma de `palavras` deve ser pelo menos 20.000, pois o conteúdo inicial pode conter palavras adicionais. As 5.038 entradas sem `frequency_rank` ficam com `NULL` no banco. As entradas `play` e `volley` receberam as correções descritas em `public/vocabulary-attribution.txt`.
+
+A planilha informa que parte do conteúdo foi gerada por IA e não recebeu revisão humana individual; as classificações CEFR podem ser estimativas. As fontes declaradas na planilha e as alterações feitas estão em `public/vocabulary-attribution.txt`. O importador CSV/JSON também aceita frequência vazia e não inventa dados ausentes.
 
 No Supabase Auth, adicione `http://localhost:3000/auth/callback` e `https://estudos-de-idioma.vercel.app/auth/callback` aos redirects. Configure a Site URL de produção e, se desejar, habilite Google OAuth no painel. O cadastro por e-mail pode exigir confirmação, conforme as opções do projeto.
 
@@ -36,6 +48,7 @@ npm test
 npm run build
 npm run seed:vocabulary -- --file data/vocabulary-starter.csv
 npm run seed:vocabulary -- --file data/vocabulary-starter.csv --apply
+npm run seed:vocabulary -- --file data/english-vocabulary-20000.csv
 ```
 
 O preview do importador não grava dados. `--apply` requer `SUPABASE_SERVICE_ROLE_KEY` em `.env.local` e deve rodar somente em um ambiente confiável. `seed:categories` e `seed:lessons` gravam diretamente e também exigem essa chave. Dados de usuário e prêmios são protegidos por RLS e funções SQL; o navegador usa apenas a chave pública.
@@ -53,4 +66,4 @@ O preview do importador não grava dados. `--apply` requer `SUPABASE_SERVICE_ROL
 
 O fluxo principal de estudo, revisão e lições está implementado. A prática inclui escolha múltipla, digitação, escuta com síntese de voz, flashcards livres e repetição de frases com reconhecimento de fala quando o navegador suporta Web Speech. A correspondência da fala é uma estimativa de texto, sem avaliação fonética. O modo offline usa IndexedDB, guarda respostas com um ID de operação e sincroniza ao voltar a conexão; abra o app online ao menos uma vez para instalar o cache. A instalação PWA exige HTTPS ou localhost.
 
-O escopo ampliado do prompt ainda exige um catálogo licenciado de 10–20 mil palavras, conteúdo de listening com áudio próprio, nivelamento e administração. Reading tem textos e questões corrigidas pelo banco; writing registra textos privados, sem avaliação automática nesta versão. Ranking e ligas exigem participação pública opt-in. O envio de Web Push depende das chaves VAPID e dos secrets do job.
+O catálogo de 20.000 palavras e suas atividades por nível estão preparados para execução no Supabase SQL Editor. O escopo ampliado ainda exige conteúdo de listening com áudio próprio, nivelamento e administração. Reading tem textos e questões corrigidas pelo banco; writing registra textos privados, sem avaliação automática nesta versão. Ranking e ligas exigem participação pública opt-in. O envio de Web Push depende das chaves VAPID e dos secrets do job.

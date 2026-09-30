@@ -4,6 +4,8 @@ const categories = [
   ["daily-life","Vida cotidiana"],["family","Família"],["food","Comida"],["travel","Viagens"],
   ["work","Trabalho"],["technology","Tecnologia"],["feelings","Sentimentos"],["nature","Natureza"],
   ["health","Saúde"],["business","Negócios"],["sports","Esportes"],["school","Escola"],
+  ["general-vocabulary","Vocabulário geral"],["science","Ciência"],["technical","Termos técnicos"],
+  ["arts","Artes"],["law","Direito"],["politics","Política"],
 ] as const;
 
 async function main() {

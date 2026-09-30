@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { previewFile } from "../scripts/seed-vocabulary/Controller/index.ts";
 import { reminderIsDue } from "../src/services/push/Controller/index.ts";
@@ -28,6 +29,31 @@ test("import preview keeps valid words and identifies duplicate and invalid rows
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("import preview accepts a blank frequency rank as absent", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "english-journey-rank-"));
+  try {
+    const path = join(directory, "words.csv");
+    await writeFile(path, "word,translation,definition_en,example_en,cefr_level,word_type,category_slug,frequency_rank\nplay,brincar,To engage in a fun activity.,Children play outside.,A1,verb,general-vocabulary,\n");
+    const result = await previewFile(path);
+    assert.equal(result.invalid, 0);
+    assert.equal(result.valid.length, 1);
+    assert.equal(result.valid[0].frequency_rank, undefined);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("the committed catalog covers all six levels and keeps the reviewed corrections", async () => {
+  const result = await previewFile(fileURLToPath(new URL("../data/english-vocabulary-20000.csv", import.meta.url)));
+  assert.equal(result.valid.length, 20000);
+  assert.equal(result.duplicate, 0);
+  assert.equal(result.invalid, 0);
+  assert.deepEqual(new Set(result.valid.map((row) => row.cefr_level)), new Set(["A1", "A2", "B1", "B2", "C1", "C2"]));
+  assert.equal(result.valid.filter((row) => row.frequency_rank === undefined).length, 5038);
+  assert.equal(result.valid.find((row) => row.word === "play")?.word_type, "verb");
+  assert.equal(result.valid.find((row) => row.word === "volley")?.category_slug, "general-vocabulary");
 });
 
 test("push reminder follows the user's timezone and half-hour dispatch window", () => {

@@ -1,1 +1,1 @@
-export { createStudyDeck, createCards } from "./Controller";
+export { createStudyDeck, createLessonDeck, createCards } from "./Controller";

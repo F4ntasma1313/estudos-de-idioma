@@ -30,7 +30,7 @@ export async function importVocabulary(rows: VocabularyRow[]): Promise<number> {
   if (missing.length) throw new Error(`Categorias não encontradas: ${missing.join(", ")}. Rode npm run seed:categories primeiro.`);
   let imported = 0;
   for (let index = 0; index < rows.length; index += 200) {
-    const batch = rows.slice(index, index + 200).map(({ category_slug, ...word }) => ({ ...word, category_id: categoryIds.get(category_slug) }));
+    const batch = rows.slice(index, index + 200).map(({ category_slug, ...word }) => ({ ...word, frequency_rank: word.frequency_rank ?? null, category_id: categoryIds.get(category_slug) }));
     const result = await client.from("vocabulary_words").upsert(batch, { onConflict: "word_key" });
     if (result.error) throw result.error;
     imported += batch.length;

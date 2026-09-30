@@ -1,12 +1,19 @@
 import { randomInt } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { findStudyWords } from "@/repositories/vocabulary";
+import { findStudyWords, findWords } from "@/repositories/vocabulary";
 import type { StudyCard, VocabularyWord } from "@/features/Vocabulary/Model";
 
 export async function createStudyDeck(client: SupabaseClient, userId: string, level: string, reviewOnly = false): Promise<StudyCard[]> {
   const words = await findStudyWords(client, userId, level, reviewOnly);
   const pool = reviewOnly ? await findStudyWords(client, userId, level) : words;
   return createCards(words, pool);
+}
+
+export async function createLessonDeck(client: SupabaseClient, words: VocabularyWord[]): Promise<StudyCard[]> {
+  if (!words.length) return [];
+  const translations = new Set(words.map((word) => word.translation));
+  const extra = translations.size < 4 ? await findWords(client, { level: words[0].cefr_level, limit: 100 }) : [];
+  return createCards(words, [...words, ...extra]);
 }
 
 export function createCards(words: VocabularyWord[], pool: VocabularyWord[]): StudyCard[] {
