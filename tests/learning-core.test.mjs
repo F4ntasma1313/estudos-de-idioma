@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -55,6 +55,24 @@ test("the committed catalog covers all six levels and keeps the reviewed correct
   assert.equal(result.valid.find((row) => row.word === "play")?.word_type, "verb");
   assert.equal(result.valid.find((row) => row.word === "volley")?.category_slug, "general-vocabulary");
   assert.equal(result.valid.filter((row) => !row.definition_pt?.trim() || !row.example_pt?.trim()).length, 0);
+});
+
+test("every catalog and starter word has an American pronunciation", async () => {
+  const [catalog, pronunciations] = await Promise.all([
+    previewFile(fileURLToPath(new URL("../data/english-vocabulary-20000.csv", import.meta.url))),
+    readFile(fileURLToPath(new URL("../data/american-pronunciations.json", import.meta.url)), "utf8").then(JSON.parse),
+  ]);
+  const byWord = new Map(pronunciations.map((entry) => [entry.word.toLowerCase(), entry]));
+  assert.equal(pronunciations.length, 20004);
+  assert.equal(byWord.size, pronunciations.length);
+  for (const row of catalog.valid) {
+    assert.match(byWord.get(row.word.toLowerCase())?.phonetic ?? "", /^\/.+\/$/, row.word);
+  }
+  for (const word of ["thank you", "no", "reliable", "substantiate"]) {
+    assert.match(byWord.get(word)?.phonetic ?? "", /^\/.+\/$/, word);
+  }
+  assert.equal(byWord.get("record")?.phonetic, "/ɹəkˈɔɹd/");
+  assert.equal(byWord.get("wind")?.phonetic, "/wˈaɪnd/");
 });
 
 test("push reminder follows the user's timezone and half-hour dispatch window", () => {

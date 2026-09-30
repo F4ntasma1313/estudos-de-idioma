@@ -1,6 +1,7 @@
 "use client";
 
 import { AppShell } from "@/components/AppShell";
+import { Pronunciation } from "@/components/Pronunciation";
 import { cefrLevels, type VocabularyViewProps } from "../Model";
 import { useVocabulary } from "../Controller";
 
@@ -14,7 +15,7 @@ export function VocabularyView({ initialLevel }: VocabularyViewProps) {
     </div>
     {state.error && <div role="alert" className="surface mt-6 p-5 text-red-700">{state.error}<button className="ml-3 underline" onClick={state.retry}>Tentar novamente</button></div>}
     <div className="mt-7 grid gap-4 md:grid-cols-2">{state.words.map((word) => <article className="surface p-6" key={word.id}>
-      <div className="flex items-start justify-between gap-3"><div><h2 className="text-2xl font-extrabold">{word.word}</h2>{word.phonetic && <p className="mt-1 text-sm text-muted">{word.phonetic}</p>}</div><span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-900">{word.cefr_level}</span></div>
+      <div className="flex items-start justify-between gap-3"><h2 className="flex flex-wrap items-center gap-x-2 text-2xl font-extrabold"><span lang="en-US">{word.word}</span><Pronunciation word={word.word} phonetic={word.phonetic} /></h2><span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-900">{word.cefr_level}</span></div>
       <p className="mt-4 text-lg font-bold text-primary" lang="pt-BR">{word.translation}</p>
       {word.definition_pt && <p className="mt-3 text-sm font-medium" lang="pt-BR">{word.definition_pt}</p>}
       <p className="mt-2 text-sm text-muted" lang="en">{word.definition_en}</p>

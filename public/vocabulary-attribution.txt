@@ -32,3 +32,15 @@ As colunas definition_pt e example_pt foram geradas por tradução automática
 local com o modelo en→pb do Argos Translate 1.9. Foi feita revisão por
 amostragem e correção pontual, sem revisão humana de cada uma das 20.000
 entradas. Erros de tradução ainda podem existir.
+
+Pronúncias americanas em IPA: dados derivados do Open English Pronouncing
+Dictionary (OpenEPD), licenciado sob CC BY-SA 4.0:
+https://github.com/JackDanger/open-english-pronouncing-dictionary
+https://creativecommons.org/licenses/by-sa/4.0/
+O OpenEPD reúne transcrições de Misaki (camadas gold e silver), CMU Pronouncing
+Dictionary e WikiPron. As entradas em data/american-pronunciations.json
+registram a origem usada em cada palavra. Para 93 expressões, combinamos a
+transcrição de palavras componentes. Para 305 termos sem transcrição direta,
+estimamos a pronúncia com g2p-en; essas estimativas não foram revisadas
+individualmente. Em homógrafos como "record" e "wind", escolhemos a variante
+conforme a classe gramatical ou definição do catálogo quando identificada.
