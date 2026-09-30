@@ -16,7 +16,7 @@ export function LessonsView({ tracks, selectedLevel, activityCount }: LessonsVie
       <h2 className="text-2xl font-extrabold">{track.title}</h2>
       <p className="mt-2 text-muted">{track.description}</p>
       <div className="mt-6 space-y-3">{track.modules.map((module) => <details key={module.id} className="rounded-xl border border-[var(--border)] bg-white p-4">
-        <summary className="cursor-pointer font-extrabold">Bloco {module.position} · {module.title} · {module.lessons.length} atividades</summary>
+        <summary className="cursor-pointer font-extrabold">{module.title} · {module.lessons.length} atividades</summary>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">{module.lessons.map((lesson) => <Link href={`/lessons/${lesson.id}`} key={lesson.id} className="rounded-xl border border-[var(--border)] p-4 transition hover:border-emerald-400">
           <span className="font-extrabold">{lesson.title}</span>
           <span className="ml-2 text-sm text-primary">{lesson.completed ? "✓ Concluída" : "Iniciar →"}</span>
