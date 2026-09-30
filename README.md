@@ -21,9 +21,11 @@ Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes.
 O arquivo `data/english-vocabulary-20000.csv` foi preparado da planilha recebida do usuário. Para carregá-lo pelo Supabase SQL Editor, execute nesta ordem:
 
 1. `supabase/manual/202609300001_vocabulary_categories.sql` (nove categorias; pode ser reexecutado).
-2. `supabase/manual/vocabulary-catalog/catalog-01.sql` até `catalog-10.sql`, em ordem (2.000 palavras por lote). Execute novamente os dez lotes se já importou a versão anterior: o `ON CONFLICT` preenche `definition_pt` e `example_pt` nos registros existentes.
-3. `supabase/manual/vocabulary-catalog/starter-bilingual.sql` (quatro palavras do conteúdo inicial ausentes da planilha).
-4. `supabase/manual/202609300002_vocabulary_activities.sql` (seis trilhas A1–C2, blocos e atividades de até 25 palavras; não precisa reexecutar se já foi aplicado).
+2. `supabase/manual/vocabulary-catalog/catalog-01.sql` até `catalog-06.sql`, em ordem (2.000 palavras por lote). Se esses lotes bilíngues já terminaram sem erro, não é preciso repeti-los.
+3. Para cada número de `07` a `10`, execute `catalog-NN.sql`, `catalog-NNb.sql`, `catalog-NNc.sql` e `catalog-NNd.sql`, nessa ordem. Cada parte contém 500 palavras e cabe no SQL Editor. Se `catalog-07.sql` exibiu “Query is too large”, comece pelo novo `catalog-07.sql` e siga até `catalog-10d.sql`.
+4. Se você tinha importado uma versão anterior sem português, repita os lotes necessários: o `ON CONFLICT` preenche `definition_pt` e `example_pt` nos registros existentes.
+5. `supabase/manual/vocabulary-catalog/starter-bilingual.sql` (quatro palavras do conteúdo inicial ausentes da planilha).
+6. `supabase/manual/202609300002_vocabulary_activities.sql` (seis trilhas A1–C2, blocos e atividades de até 25 palavras; não precisa reexecutar se já foi aplicado).
 
 O último script mostra a quantidade de atividades e palavras por nível. A soma de `palavras` deve ser pelo menos 20.000, pois o conteúdo inicial pode conter palavras adicionais. As 5.038 entradas sem `frequency_rank` ficam com `NULL` no banco. As entradas `play` e `volley` receberam as correções descritas em `public/vocabulary-attribution.txt`.
 
