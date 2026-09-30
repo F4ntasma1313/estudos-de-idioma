@@ -13,8 +13,15 @@ No SQL Editor do Supabase, execute as migrations nesta ordem, cada uma uma únic
 3. `supabase/migrations/202609290003_starter_content.sql`
 4. `supabase/migrations/202609290004_reading_writing.sql`
 5. `supabase/migrations/202609290005_rankings_leagues.sql`
+6. `supabase/migrations/202609300006_activity_completions.sql` (conclusão das atividades no perfil).
 
 Em projetos onde as primeiras já foram aplicadas, execute somente as pendentes. O conteúdo inicial tem 52 palavras revisadas, três trilhas, seis textos de leitura e seis desafios de escrita.
+
+### Atividades diárias
+
+A área `/activities` reúne 40 atividades de vocabulário, escuta, fala, leitura, escrita e aventuras. O painel mostra uma sugestão diferente por dia, escolhida de forma estável conforme o fuso, nível CEFR, objetivo de estudo e revisões pendentes do usuário. O aluno pode escolher qualquer atividade no catálogo. Exercícios de vocabulário usam palavras do nível do perfil quando o catálogo está disponível; níveis B1–C2 incluem uma justificativa extra nos desafios fechados.
+
+As escolhas e respostas curtas têm correção objetiva. Escrita livre e gravações oferecem exemplo e autoavaliação; o navegador não atribui nota fonética. As gravações ficam apenas no dispositivo durante a atividade. A conclusão é salva na conta após aplicar `202609300006_activity_completions.sql`; antes disso, ela continua disponível localmente no navegador e sincroniza numa visita posterior.
 
 ### Catálogo de 20.000 palavras
 

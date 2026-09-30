@@ -7,5 +7,5 @@ export default async function DashboardPage() {
   const result = await loadDashboard();
   if (result.status === "unauthorized") redirect("/auth");
   if (result.status === "onboarding") redirect("/onboarding");
-  return <Dashboard data={result.data} />;
+  return <Dashboard data={result.data} daily={result.daily} goalPercent={result.goalPercent} />;
 }

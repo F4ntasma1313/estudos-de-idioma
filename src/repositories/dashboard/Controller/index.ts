@@ -3,7 +3,7 @@ import type { DashboardData } from "@/features/Dashboard/Model";
 
 export async function getDashboardData(client: DatabaseClient, userId: string): Promise<DashboardData | null> {
   const [profile, goal, settings, levels, streak, learned, due] = await Promise.all([
-    client.from("profiles").select("display_name,cefr_level,created_at,onboarding_completed_at").eq("user_id", userId).single(),
+    client.from("profiles").select("display_name,cefr_level,learning_reason,created_at,onboarding_completed_at").eq("user_id", userId).single(),
     client.from("daily_goals").select("target_minutes").eq("user_id", userId).single(),
     client.from("user_settings").select("timezone").eq("user_id", userId).single(),
     client.from("user_levels").select("total_xp,level").eq("user_id", userId).maybeSingle(),
@@ -17,7 +17,7 @@ export async function getDashboardData(client: DatabaseClient, userId: string): 
   const { data: today } = await client.from("user_daily_progress").select("activity_seconds,answers").eq("user_id", userId).eq("local_date", localDate).maybeSingle();
   return {
     userId,
-    name: profile.data.display_name, cefrLevel: profile.data.cefr_level,
+    name: profile.data.display_name, cefrLevel: profile.data.cefr_level, learningReason: profile.data.learning_reason, timezone,
     targetMinutes: goal.data.target_minutes, startedAt: profile.data.created_at,
     totalXp: levels.data?.total_xp ?? 0, level: levels.data?.level ?? 1,
     streakDays: streak.data?.current_days ?? 0, learnedWords: learned.count ?? 0,

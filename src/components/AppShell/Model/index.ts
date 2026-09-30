@@ -1,6 +1,7 @@
 export const navigation = [
   { href: "/dashboard", label: "Início", symbol: "⌂" },
   { href: "/study", label: "Estudar", symbol: "◈" },
+  { href: "/activities", label: "Atividades", symbol: "✦" },
   { href: "/review", label: "Revisar", symbol: "↻" },
   { href: "/vocabulary", label: "Palavras", symbol: "Aa" },
   { href: "/progress", label: "Progresso", symbol: "▥" },
