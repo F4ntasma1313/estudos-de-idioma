@@ -5,7 +5,7 @@ export const communicationActivities: readonly ActivityDefinition[] = [
     { kind: "choice", context: "Would you like some coffee?", prompt: "Qual resposta é natural se você aceita a oferta?", options: ["Yes, please.", "I went yesterday.", "It's on the table.", "Because I can."], answer: "Yes, please.", explanation: "A pergunta oferece café; Yes, please aceita educadamente." },
   ] },
   { id: 12, slug: "situacao-real", title: "Simular uma situação real", category: "Conversação", icon: "🧳", summary: "Resolva um objetivo de viagem usando inglês.", interests: ["Viagens", "Conversação"], steps: [
-    { kind: "choice", context: "Você chegou ao hotel, mas sua reserva não aparece.", prompt: "O que você diz primeiro ao atendente?", options: ["Could you check my booking, please?", "I am a blue suitcase.", "The weather was yesterday.", "No, I don't like trains."], answer: "Could you check my booking, please?", explanation: "Uma pergunta educada ajuda a localizar a reserva." },
+    { kind: "choice", context: "Receptionist: 'I'm sorry, I can't find your booking.'", prompt: "O que você diz primeiro ao atendente em inglês?", options: ["Could you check my booking, please?", "I am a blue suitcase.", "The weather was yesterday.", "No, I don't like trains."], answer: "Could you check my booking, please?", explanation: "Uma pergunta educada ajuda a localizar a reserva." },
     { kind: "write", prompt: "O atendente pede seu nome e a data. Escreva uma resposta breve em inglês.", modelAnswer: "My name is Ana Silva. I booked a room for Friday, June 12.", hint: "Inclua nome, data e uma frase educada." },
   ] },
   { id: 13, slug: "pedir-esclarecimento", title: "Pedir esclarecimentos", category: "Conversação", icon: "❔", summary: "Faça a pergunta que falta para entender um combinado.", interests: ["Viagens", "Trabalho", "Conversação"], steps: [
@@ -28,11 +28,11 @@ export const communicationActivities: readonly ActivityDefinition[] = [
     { kind: "choice", context: "___ rain", prompt: "Qual adjetivo combina naturalmente com rain?", options: ["heavy", "strong", "big", "hard"], answer: "heavy", explanation: "Dizemos heavy rain." },
   ] },
   { id: 19, slug: "significado-contexto", title: "Escolher o significado pelo contexto", category: "Vocabulário", icon: "🏦", summary: "A mesma palavra pode ter sentidos diferentes.", interests: ["Estudos", "Viagens"], steps: [
-    { kind: "choice", context: "We sat on the river bank.", prompt: "O que bank significa nessa frase?", options: ["margem do rio", "instituição financeira", "balcão", "banco de dados"], answer: "margem do rio", explanation: "River define o contexto: é a margem do rio." },
-    { kind: "choice", context: "The bank closes at five.", prompt: "E nesta frase?", options: ["instituição financeira", "margem do rio", "montanha", "cadeira"], answer: "instituição financeira", explanation: "Closes at five indica o horário de uma instituição." },
+    { kind: "choice", context: "We sat on the river bank.", prompt: "Escolha a definição de bank em inglês para essa frase.", options: ["The land beside a river", "A place that keeps money", "A service counter", "A collection of data"], answer: "The land beside a river", explanation: "River define o contexto: é a margem do rio." },
+    { kind: "choice", context: "The bank closes at five.", prompt: "E nesta frase, qual definição em inglês corresponde a bank?", options: ["A place that keeps money", "The land beside a river", "A mountain", "A chair"], answer: "A place that keeps money", explanation: "Closes at five indica o horário de uma instituição financeira." },
   ] },
   { id: 20, slug: "falsos-cognatos", title: "Resolver falsos cognatos", category: "Vocabulário", icon: "⚠️", summary: "Evite traduções parecidas que mudam o sentido.", interests: ["Estudos", "Conversação"], steps: [
-    { kind: "choice", context: "I actually live in Brazil.", prompt: "Actually significa o quê nessa frase?", options: ["na verdade", "atualmente", "acidentalmente", "ativamente"], answer: "na verdade", explanation: "Actually = na verdade; currently = atualmente." },
+    { kind: "choice", context: "I actually live in Brazil.", prompt: "Qual expressão em inglês pode substituir actually sem mudar o sentido?", options: ["In fact", "At the moment", "By accident", "Actively"], answer: "In fact", explanation: "Actually = in fact (na verdade); currently = at the moment (atualmente)." },
     { kind: "write", prompt: "Escreva uma frase curta com currently para dizer onde você mora atualmente.", modelAnswer: "I currently live in Brazil.", hint: "Currently indica tempo presente." },
   ] },
 ];

@@ -21,6 +21,25 @@ test("all forty activities have distinct playable challenges", () => {
   }
 });
 
+test("closed challenges require English answers across levels", () => {
+  const portugueseChoices = /\b(?:livro|cadeira|caneta|debaixo|atr[aá]s|dentro|margem|institui[cç][aã]o|atualmente|chuva|nenhum|ambos|caixa|tela|amarelo|vermelho|suco|sopa|salada|nada|pedir|mandar|ignorar|trocar)\b/i;
+  for (const activity of activities) {
+    for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
+      for (const step of activitySteps(activity, level)) {
+        if (step.kind !== "choice" && step.kind !== "scene") continue;
+        assert.ok(step.options?.includes(step.answer), `${activity.slug} ${level}: answer must be an option`);
+        for (const option of step.options) {
+          assert.doesNotMatch(option, portugueseChoices, `${activity.slug} ${level}: ${option}`);
+        }
+      }
+    }
+  }
+  const restaurant = activities.find((activity) => activity.id === 37);
+  assert.match(restaurant.steps[0].context, /I'd like something red and cold/i);
+  assert.equal(restaurant.steps[0].answer, "Cold tomato juice");
+  assert.match(restaurant.steps[2].context, /cold beet juice/i);
+});
+
 test("daily activity is stable in the user's timezone and varies across days", () => {
   assert.equal(localActivityDate("America/Sao_Paulo", new Date("2026-10-01T01:00:00Z")), "2026-09-30");
   const first = dailyActivity(profile, "2026-09-30");

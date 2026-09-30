@@ -28,7 +28,7 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
   const step = steps[index];
   const band = levelBand(profile.level);
   const prompt = step?.promptByBand?.[band] ?? step?.prompt ?? "";
-  const levelGuide = band === "basic" ? "Responda com palavras ou frases curtas." : band === "intermediate" ? "Inclua uma razão ou detalhe na resposta." : "Use uma resposta completa, precisa e com justificativa.";
+  const levelGuide = band === "basic" ? "Pratique em inglês com palavras ou frases curtas." : band === "intermediate" ? "Responda em inglês e inclua uma razão ou detalhe." : "Responda em inglês com precisão e justificativa.";
   const readyToAnswer = activity.id !== 10 || index !== 0 || secondsLeft === 0;
 
   useEffect(() => {
