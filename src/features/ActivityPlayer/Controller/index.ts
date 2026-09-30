@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ActivityPlayerProps, ActivityStep, StepFeedback } from "../Model";
-import { activitySteps, levelBand, normalizeAnswer, readGrammarMistake, saveCompletion, saveGrammarMistake } from "@/features/Activities/Controller";
+import { audioRates, type ActivityPlayerProps, type ActivityStep, type AudioRate, type StepFeedback } from "../Model";
+import { activityAudioText, activitySteps, incorrectActivityFeedback, levelBand, normalizeAnswer, readGrammarMistake, saveCompletion, saveGrammarMistake } from "@/features/Activities/Controller";
 import { postCompletion } from "@/services/activities";
 
 export function useActivityPlayer({ activity, profile, date, vocabularyCards }: ActivityPlayerProps) {
@@ -17,6 +17,7 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
   const [solved, setSolved] = useState(false);
   const [finished, setFinished] = useState(false);
   const [canSpeak, setCanSpeak] = useState(false);
+  const [audioRate, setAudioRate] = useState<AudioRate>(0.85)
   const [canRecord, setCanRecord] = useState(false);
   const [recording, setRecording] = useState(false);
   const [recordingUrl, setRecordingUrl] = useState("");
@@ -26,6 +27,7 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
   const stream = useRef<MediaStream | null>(null);
   const audioUrl = useRef("");
   const step = steps[index];
+  const audioText = step ? activityAudioText(step) : ""
   const band = levelBand(profile.level);
   const prompt = step?.promptByBand?.[band] ?? step?.prompt ?? "";
   const levelGuide = band === "basic" ? "Pratique em inglês com palavras ou frases curtas." : band === "intermediate" ? "Responda em inglês e inclua uma razão ou detalhe." : "Responda em inglês com precisão e justificativa.";
@@ -46,15 +48,40 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
     return () => window.clearTimeout(timer);
   }, [secondsLeft]);
 
-  function speak(rate = 0.85) {
-    if (!canSpeak || !step?.speechText) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(step.speechText);
-    utterance.lang = "en-US";
-    utterance.rate = rate;
-    const voice = window.speechSynthesis.getVoices().find((item) => item.lang.toLowerCase() === "en-us");
-    if (voice) utterance.voice = voice;
-    window.speechSynthesis.speak(utterance);
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis?.cancel()
+    }
+  }, [index])
+
+  function speak(text = audioText) {
+    if (!canSpeak || !text.trim()) {
+      return
+    }
+
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = "en-US"
+    utterance.rate = audioRate
+
+    const voice = window.speechSynthesis
+      .getVoices()
+      .find((item) => item.lang.toLowerCase() === "en-us")
+
+    if (voice) {
+      utterance.voice = voice
+    }
+
+    window.speechSynthesis.speak(utterance)
+  }
+
+  function changeAudioRate(value: number) {
+    const rate = audioRates.find((item) => item === value)
+
+    if (rate) {
+      setAudioRate(rate)
+    }
   }
 
   function evaluate(value: string, current: ActivityStep = step) {
@@ -66,7 +93,7 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
       setFeedback({ correct: true, message: current.explanation ?? "Muito bem!" });
     } else {
       saveGrammarMistake(profile.userId, activity.id);
-      setFeedback({ correct: false, message: attempts === 0 ? "Ainda não. Tente novamente; uma pista está disponível." : `Resposta sugerida: ${current.answer ?? ""}. ${current.explanation ?? ""}` });
+      setFeedback({ correct: false, message: incorrectActivityFeedback(current, attempts) });
       if (attempts >= 1) setSolved(true);
     }
   }
@@ -137,5 +164,42 @@ export function useActivityPlayer({ activity, profile, date, vocabularyCards }: 
     setFeedback(null); setAttempts(0); setSolved(false); setRecordingUrl(""); setSecondsLeft(null);
   }
 
-  return { step, stepsCount: steps.length, index, prompt, band, levelGuide, readyToAnswer, answer, setAnswer, selected, ordered, feedback, attempts, solved, finished, canSpeak, canRecord, recording, recordingUrl, secondsLeft, responses, speak, choose, submitText, addToken, resetOrder, submitOrder, submitOpen, revealRecord, startRecording, stopRecording, next, startTimer: () => setSecondsLeft(15) };
+  return {
+    step,
+    stepsCount: steps.length,
+    index,
+    prompt,
+    band,
+    levelGuide,
+    readyToAnswer,
+    answer,
+    setAnswer,
+    selected,
+    ordered,
+    feedback,
+    attempts,
+    solved,
+    finished,
+    canSpeak,
+    audioRate,
+    changeAudioRate,
+    audioText,
+    canRecord,
+    recording,
+    recordingUrl,
+    secondsLeft,
+    responses,
+    speak,
+    choose,
+    submitText,
+    addToken,
+    resetOrder,
+    submitOrder,
+    submitOpen,
+    revealRecord,
+    startRecording,
+    stopRecording,
+    next,
+    startTimer: () => setSecondsLeft(15),
+  }
 }

@@ -79,6 +79,42 @@ export function activitySteps(activity: ActivityDefinition, level: ActivityLevel
   return steps;
 }
 
+export function activityAudioText(step: ActivityStep): string {
+  if (step.speechText) {
+    return step.speechText
+  }
+
+  if (step.kind === "route") {
+    return "Review today's English words and say each word aloud."
+  }
+
+  if (step.kind === "choice" || step.kind === "scene" || step.kind === "text") {
+    return step.context ?? step.answer ?? ""
+  }
+
+  if (step.kind === "order") {
+    return step.answer ?? ""
+  }
+
+  if (step.deferModel) {
+    return step.context ?? "Write your answer in English, then review your first draft."
+  }
+
+  return step.modelAnswer ?? ""
+}
+
+export function incorrectActivityFeedback(step: ActivityStep, attempts: number): string {
+  if (attempts > 0) {
+    return `Resposta sugerida: ${step.answer ?? ""}. ${step.explanation ?? ""}`.trim()
+  }
+
+  if (step.hint) {
+    return "Ainda não. Veja a pista abaixo e tente novamente."
+  }
+
+  return "Ainda não. Ouça o trecho em inglês e compare as opções antes de tentar novamente."
+}
+
 export function normalizeAnswer(value: string): string {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, " ").trim();
 }

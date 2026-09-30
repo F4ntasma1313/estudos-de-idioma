@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { activities } from "../src/features/Activities/Model/index.ts";
-import { activitySteps, dailyActivity, localActivityDate, normalizeAnswer } from "../src/features/Activities/Controller/index.ts";
+import { activityAudioText, activitySteps, dailyActivity, incorrectActivityFeedback, localActivityDate, normalizeAnswer } from "../src/features/Activities/Controller/index.ts";
 
 const profile = { userId: "00000000-0000-4000-8000-000000000001", level: "A2", learningReason: "Viagens", timezone: "America/Sao_Paulo", dueWords: 0 };
 
@@ -38,6 +38,30 @@ test("closed challenges require English answers across levels", () => {
   assert.match(restaurant.steps[0].context, /I'd like something red and cold/i);
   assert.equal(restaurant.steps[0].answer, "Cold tomato juice");
   assert.match(restaurant.steps[2].context, /cold beet juice/i);
+});
+
+test("every activity step has audio content and feedback only promises a real hint", () => {
+  for (const activity of activities) {
+    for (const level of ["A1", "A2", "B1", "B2", "C1", "C2"]) {
+      for (const step of activitySteps(activity, level)) {
+        assert.ok(activityAudioText(step).trim(), `${activity.slug} ${level}: missing audio`)
+
+        if (!step.answer) {
+          continue
+        }
+
+        const feedback = incorrectActivityFeedback(step, 0)
+        assert.equal(feedback.includes("pista"), Boolean(step.hint), `${activity.slug} ${level}`)
+      }
+    }
+  }
+
+  const contextActivity = activities.find((activity) => activity.id === 19)
+  assert.equal(activityAudioText(contextActivity.steps[0]), "We sat on the river bank.")
+  assert.match(incorrectActivityFeedback(contextActivity.steps[0], 0), /pista abaixo/)
+
+  const draftActivity = activities.find((activity) => activity.id === 28)
+  assert.doesNotMatch(activityAudioText(draftActivity.steps[0]), /Thursday at 2 p\.m\./)
 });
 
 test("daily activity is stable in the user's timezone and varies across days", () => {
